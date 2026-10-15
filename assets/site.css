@@ -101,9 +101,15 @@ img { max-width:100%; display:block; }
 .product-cta .primary-link { background:#fff; color:var(--purple); margin-top:0; white-space:nowrap; }
 .product-cta .primary-link:hover { background:#f4f0ff; }
 
-.about-section { display:grid; grid-template-columns:1fr 2.05fr; gap:64px; padding-block:68px 76px; border-top:1px solid var(--rule); }
-.about-copy h2 { max-width:650px; margin:0; font-size:clamp(2rem,3.5vw,3rem); font-weight:500; line-height:1.16; letter-spacing:-.043em; text-wrap:balance; }
-.about-copy p { max-width:600px; margin:24px 0 0; color:var(--muted); font-size:1.0625rem; }
+.about-story { padding-block:64px 88px; border-top:1px solid var(--rule); }
+.about-story-copy { max-width:800px; }
+.about-story h2 { margin:0 0 32px; font-size:clamp(1.65rem,2.6vw,2.3rem); font-weight:600; line-height:1.25; letter-spacing:-.035em; text-wrap:balance; }
+.about-story p { margin:0 0 26px; color:var(--muted); font-size:1.0625rem; line-height:1.8; }
+.about-story strong { color:var(--ink); font-weight:650; }
+.story-question strong { display:block; margin-top:12px; color:var(--purple); font-size:clamp(1.3rem,2vw,1.65rem); line-height:1.4; letter-spacing:-.02em; }
+.about-story .story-closing { margin-top:42px; font-size:clamp(1.8rem,3vw,2.5rem); line-height:1.25; letter-spacing:-.035em; }
+.story-closing strong { color:var(--purple); }
+.about-story .story-postscript { margin-bottom:0; }
 
 .contact-main { padding-block:85px 103px; display:grid; grid-template-columns:1fr 1.2fr; gap:105px; min-height:650px; border-top:1px solid var(--rule); }
 .contact-intro h1 { color:var(--purple); font-size:clamp(3.25rem,6vw,5.7rem); font-weight:650; line-height:1.08; letter-spacing:-.065em; margin:0 0 29px; }
@@ -140,7 +146,7 @@ input,textarea,button { font:inherit; }
   .brand { width:205px; }
   .site-header nav { gap:24px; }
   .hero { padding-block:79px 96px; }
-  .approach,.company,.section-grid,.about-section { grid-template-columns:1fr 2.4fr; gap:36px; }
+  .approach,.company,.section-grid { grid-template-columns:1fr 2.4fr; gap:36px; }
   .product-hero { grid-template-columns:1fr; gap:45px; }
   .product-brand-panel { min-height:300px; }
   .capability-flow { grid-template-columns:1fr; gap:52px; }
@@ -159,7 +165,7 @@ input,textarea,button { font:inherit; }
   .hero { padding-block:72px 90px; }
   .simple { font-size:clamp(5.2rem,20vw,8.75rem); }
   .complex { font-size:2rem; margin-top:14px; }
-  .approach,.company,.section-grid,.about-section { grid-template-columns:1fr; gap:30px; }
+  .approach,.company,.section-grid { grid-template-columns:1fr; gap:30px; }
   .approach { padding-block:48px 63px; }
   .section-label { margin:0; }
   .approach h2 { font-size:clamp(2rem,5.8vw,2.8rem); max-width:580px; }
@@ -171,7 +177,7 @@ input,textarea,button { font:inherit; }
   .footer-nav { justify-content:flex-start; column-gap:24px; }
   .footer-bottom { flex-direction:column; align-items:stretch; gap:10px; margin-top:24px; }
   .footer-copyright { align-self:flex-end; }
-  .about-section { padding-block:48px 56px; }
+  .about-story { padding-block:42px 64px; }
   .page-hero { padding-block:58px 65px; }
   .product-hero { padding-block:50px 64px; }
   .product-brand-panel { padding:30px; min-height:270px; }
