@@ -79,16 +79,14 @@ img { max-width:100%; display:block; }
 .section-grid h2 { margin:0; font-size:clamp(2.3rem,4vw,3.4rem); line-height:1.08; letter-spacing:-.045em; font-weight:520; }
 .section-copy > p:first-child { margin-top:0; }
 .section-copy p { max-width:720px; color:var(--muted); font-size:1.05rem; }
-.capability-grid { display:grid; grid-template-columns:1fr 1fr; gap:1px; margin-top:40px; background:var(--rule); border:1px solid var(--rule); }
-.capability { background:#fff; padding:30px 32px; min-height:190px; }
-.alt .capability { background:#fff; }
-.capability .cap-num { display:block; color:var(--purple); font-size:.75rem; margin-bottom:18px; }
-.capability h3 { margin:0 0 10px; font-size:1.25rem; font-weight:650; letter-spacing:-.02em; }
-.capability p { margin:0; color:var(--muted); font-size:.94rem; }
+.capability-flow { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:48px; margin:46px 0 0; padding:0; list-style:none; }
+.capability { position:relative; min-width:0; }
+.capability h3 { min-height:2.8em; margin:0 0 14px; font-size:1.25rem; line-height:1.4; font-weight:650; letter-spacing:-.02em; }
+.capability p { max-width:54ch; margin:0; color:var(--muted); font-size:.94rem; }
+.flow-arrow { position:absolute; top:0; right:-36px; width:24px; color:var(--purple); font-size:1.5rem; line-height:1.2; text-align:center; }
 .decision-steps { display:grid; grid-template-columns:repeat(3,1fr); gap:32px; margin-top:42px; }
 .decision-step { border-top:2px solid var(--purple); padding-top:19px; }
-.decision-step span { color:var(--purple); font-size:.75rem; }
-.decision-step h3 { margin:12px 0 8px; font-size:1.18rem; }
+.decision-step h3 { margin:0 0 8px; font-size:1.18rem; }
 .decision-step p { margin:0; color:var(--muted); font-size:.94rem; }
 .product-facts { display:grid; grid-template-columns:repeat(4,1fr); gap:0; margin-top:42px; border:1px solid var(--rule); }
 .product-fact { padding:24px; border-right:1px solid var(--rule); }
@@ -145,6 +143,9 @@ input,textarea,button { font:inherit; }
   .approach,.company,.section-grid,.about-section { grid-template-columns:1fr 2.4fr; gap:36px; }
   .product-hero { grid-template-columns:1fr; gap:45px; }
   .product-brand-panel { min-height:300px; }
+  .capability-flow { grid-template-columns:1fr; gap:52px; }
+  .capability h3 { min-height:0; margin-bottom:10px; }
+  .flow-arrow { top:auto; right:auto; bottom:-40px; left:0; transform:rotate(90deg); }
   .product-facts { grid-template-columns:1fr 1fr; }
   .product-fact:nth-child(2) { border-right:0; }
   .product-fact:nth-child(-n+2) { border-bottom:1px solid var(--rule); }
@@ -176,7 +177,6 @@ input,textarea,button { font:inherit; }
   .product-brand-panel { padding:30px; min-height:270px; }
   .product-brand-panel .incredible-logo { width:min(100%,380px); }
   .products-section { padding-block:64px; }
-  .capability-grid { grid-template-columns:1fr; }
   .decision-steps { grid-template-columns:1fr; gap:28px; }
   .product-facts { grid-template-columns:1fr; }
   .product-fact { border-right:0; border-bottom:1px solid var(--rule); }
