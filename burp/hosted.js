@@ -20911,7 +20911,7 @@ function gatePendingWorkflows() {
   gate();
 }
 async function loginStaff(adapter) {
-  root.innerHTML = `<main class="content"><section class="panel"><h1>BURP \xB7 Feedia Operations</h1><p>Hosted development \xB7 employee authorization required</p><form id="staff-login"><label>Email<input name="email" type="email" required autocomplete="username"></label><label>Password<input name="password" type="password" required autocomplete="current-password"></label><button>Sign in</button></form><p id="error" role="status"></p></section></main>`;
+  root.innerHTML = `<section class="login"><div class="wordmark">BURP</div><div class="subbrand">Business &amp; User Resolution Platform<br>Feedia Operations \xB7 Hosted development</div><h2>Operator sign in</h2><p class="muted">Use your Supabase employee account. MFA is required before the console opens.</p><form id="staff-login"><label>Email<input name="email" type="email" required autocomplete="username"></label><label>Password<input name="password" type="password" required autocomplete="current-password"></label><button>Sign in</button></form><p id="error" role="status"></p></section>`;
   await new Promise((resolve) => {
     document.querySelector("#staff-login").onsubmit = async (e) => {
       e.preventDefault();
@@ -20924,7 +20924,7 @@ async function loginStaff(adapter) {
     };
   });
 }
-async function burp(adapter) {
+async function fullBurp(adapter) {
   let info;
   try {
     info = await adapter.request("/api/me");
@@ -20933,40 +20933,20 @@ async function burp(adapter) {
     info = await adapter.request("/api/me");
   }
   await staffMfa(adapter.client, info);
-  const d = await adapter.rpc("fd_employee_state");
-  root.innerHTML = `<header class="heading"><h1>BURP \xB7 Feedia Operations</h1><button id="logout">Sign out</button></header><main class="content"><p class="lab-notice">Hosted development \xB7 Supabase authoritative records \xB7 refresh to see another application's updates.</p><div class="row-actions"><button id="refresh">Refresh shared data</button></div><section class="panel"><h2>Business claims</h2>${d.claims.map((c) => `<form id="claim-${esc(c.id)}"><h3>${esc(c.business)} \xB7 ${esc(c.state)}</h3><p>${esc(c.evidence)}</p><label>Decision<select name="decision"><option>Needs Evidence</option><option>Approved</option><option>Rejected</option></select></label><label>User-facing review reason<textarea name="note" required></textarea></label><button>Record reviewed decision</button></form>`).join("") || "<p>No claims.</p>"}</section><section class="panel"><h2>Shared issues and canonical facts</h2>${d.issues.map((i) => `<details><summary>${esc(i.business)} \xB7 ${esc(i.field)} \xB7 ${esc(i.state)}</summary><p>Accepted: ${esc(JSON.stringify(i.current_fact))}</p><form id="fact-${esc(i.id)}"><label>Accepted ${esc(i.field)} ${i.field === "hours" ? "JSON" : ""}<textarea name="value" required></textarea></label><label>Evidence<textarea name="evidence" required></textarea></label><button>Accept through shared boundary</button></form><h3>Linked work / pending evidence</h3><pre>${esc(JSON.stringify(i.links, null, 2))}</pre><h3>Accepted history</h3><pre>${esc(JSON.stringify(i.history, null, 2))}</pre></details>`).join("") || "<p>No fact issues yet.</p>"}</section><section class="panel"><h2>Cases</h2>${d.cases.map((c) => `<p>${esc(c.summary)} \xB7 ${esc(c.state)} \xB7 ${esc(c.issue)}</p>`).join("") || "<p>No cases.</p>"}</section><section class="panel"><h2>Owner submissions and support</h2>${d.documents.map((r) => `<form id="request-${esc(r.id)}"><h3>${esc(r.kind)} \xB7 ${esc(r.state)}</h3><pre>${esc(JSON.stringify(r.data, null, 2))}</pre><select name="decision"><option>Approved</option><option>Rejected</option></select><label>Review reason<textarea name="note" required></textarea></label><button>Record submission review</button><p>Submission approval does not apply protected facts, deliver ads or publish media.</p></form>`).join("") || "<p>No pending submissions.</p>"}</section><section class="panel"><h2>Other operations</h2><p>National ingestion, snapshot import/export, media moderation, exceptional manual Credibility management, comprehensive consumer support and LAB reset are disabled in connected mode pending their authorized shared adapters. No stale SQLite records are served here.</p></section><p id="result" role="status"></p></main>`;
-  const bind = (id, action, body) => {
-    document.getElementById(id).onsubmit = async (e) => {
-      e.preventDefault();
-      try {
-        await adapter.command(action, { ...body, ...Object.fromEntries(new FormData(e.target)) });
-        await burp(adapter);
-      } catch (error) {
-        document.querySelector("#result").textContent = error.message;
-      }
-    };
+  adapter.burpRequest = async (path, body) => {
+    if (path === "/api/logout") {
+      await adapter.request(path, body);
+      location.reload();
+      return {};
+    }
+    if (path.startsWith("/api/boss/")) return adapter.request(path, body);
+    const u = new URL(path, location.origin);
+    const query = Object.fromEntries(u.searchParams);
+    return adapter.rpc("fd_burp", { path: u.pathname, query, body: body ?? null, operation_id: body ? body.operation_id || crypto.randomUUID() : null });
   };
-  for (const c of d.claims) bind("claim-" + c.id, "claim.review", { id: c.id, version: c.revision });
-  for (const r of d.documents) bind("request-" + r.id, "request.review", { id: r.id, version: r.revision });
-  for (const i of d.issues) {
-    const f = document.getElementById("fact-" + i.id);
-    f.onsubmit = async (e) => {
-      e.preventDefault();
-      try {
-        const b = Object.fromEntries(new FormData(f));
-        if (i.field === "hours") b.value = JSON.parse(b.value);
-        await adapter.command("fact.accept", { ...b, issue: i.id, business_version: i.business_version, issue_revision: i.revision });
-        await burp(adapter);
-      } catch (error) {
-        document.querySelector("#result").textContent = error.message;
-      }
-    };
-  }
-  document.querySelector("#refresh").onclick = () => burp(adapter);
-  document.querySelector("#logout").onclick = async () => {
-    await adapter.client.auth.signOut();
-    location.reload();
-  };
+  root.innerHTML = '<div id="app"></div><div id="toast" role="status" aria-live="polite"></div>';
+  for (const file of ["app.js", "operations.js", "manager.js", "burp-workspaces.js"]) await script("./" + file);
+  await window.startHostedBurp();
 }
 async function setupPassword(client) {
   root.innerHTML = `<main class="content"><section class="panel"><h1>Set up your Feedia account</h1><form id="setup-password"><label>New password<input name="password" type="password" minlength="12" required autocomplete="new-password"></label><label>Confirm password<input name="confirmation" type="password" minlength="12" required autocomplete="new-password"></label><button>Save password</button></form><p id="error" role="status"></p></section></main>`;
@@ -21002,15 +20982,19 @@ async function boot() {
       await setupPassword(client);
     }
     if (document.body.dataset.portal === "burp") {
-      await burp(adapter);
+      await fullBurp(adapter);
     } else {
       await script("./refinements.js");
       await script("./app.js");
       gatePendingWorkflows();
     }
   } catch (error) {
-    root.innerHTML = `<main class="content"><h1>Hosted development unavailable</h1><p role="alert">${esc(error.message)}</p><button id="retry">Retry connection</button></main>`;
+    root.innerHTML = `<main class="content"><h1>Hosted development unavailable</h1><p role="alert">${esc(error.message)}</p><button id="retry">Retry connection</button><button id="signout">Sign out and sign in again</button></main>`;
     document.querySelector("#retry").onclick = () => location.reload();
+    document.querySelector("#signout").onclick = async () => {
+      await window.FeediaHosted?.client.auth.signOut();
+      location.reload();
+    };
   }
 }
 if (typeof document !== "undefined") boot();
