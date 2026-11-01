@@ -20902,7 +20902,7 @@ function gatePendingWorkflows() {
         f.querySelectorAll("input,select,textarea,button").forEach((e) => e.disabled = true);
         const p = document.createElement("p");
         p.className = "note";
-        p.textContent = "Hosted media upload/moderation is not connected. No upload success is simulated.";
+        p.textContent = "This legacy media-request form is separate. Use Submit factual photo for validated shared photos and initial featuring.";
         f.prepend(p);
       }
     }
@@ -20947,6 +20947,7 @@ async function fullBurp(adapter) {
   root.innerHTML = '<div id="app"></div><div id="toast" role="status" aria-live="polite"></div>';
   for (const file of ["app.js", "operations.js", "manager.js", "burp-workspaces.js"]) await script("./" + file);
   await window.startHostedBurp();
+  await script("./corrections.js");
 }
 async function setupPassword(client) {
   root.innerHTML = `<main class="content"><section class="panel"><h1>Set up your Feedia account</h1><form id="setup-password"><label>New password<input name="password" type="password" minlength="12" required autocomplete="new-password"></label><label>Confirm password<input name="confirmation" type="password" minlength="12" required autocomplete="new-password"></label><button>Save password</button></form><p id="error" role="status"></p></section></main>`;
@@ -20976,6 +20977,7 @@ async function boot() {
     const client = createClient(config.url, config.publishableKey, { auth: { storageKey: "feedia-" + document.body.dataset.portal + "-development", persistSession: true, autoRefreshToken: true, detectSessionInUrl: true } });
     const adapter = new HostedAdapter(client);
     window.FeediaHosted = adapter;
+    window.FeediaMapConfig = { style: config.map?.style || "https://tiles.openfreemap.org/styles/liberty" };
     if (["invite", "recovery"].includes(callbackType)) {
       const { data: { session }, error } = await client.auth.getSession();
       if (error || !session) throw Error("Account setup link is invalid or expired. Request another invitation.");
@@ -20986,6 +20988,7 @@ async function boot() {
     } else {
       await script("./refinements.js");
       await script("./app.js");
+      await script("./corrections.js");
       gatePendingWorkflows();
     }
   } catch (error) {
