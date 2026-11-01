@@ -26337,7 +26337,7 @@ function pinEditor(container, { original = null, proposed = original, editable =
       if (i2 === 1 && editable) {
         const marker = document.createElement("span");
         marker.className = "fixed-map-pin";
-        marker.textContent = "\u{1F4CD}";
+        marker.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 44 52" width="44" height="52"><path fill="#b04424" d="M22 52C17 43 3 31 3 19C3-6 41-6 41 19C41 31 27 43 22 52Z"/><circle cx="22" cy="18" r="6" fill="white"/></svg>';
         marker.setAttribute("aria-hidden", "true");
         el2.append(marker);
         map.on("moveend", (e66) => {
