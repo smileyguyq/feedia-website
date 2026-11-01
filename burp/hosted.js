@@ -20850,7 +20850,7 @@ var HostedAdapter = class {
 function script(path) {
   return new Promise((resolve, reject) => {
     const s = document.createElement("script");
-    s.src = path;
+    s.src = path + "?v=" + (document.querySelector("meta[name=feedia-build]")?.content || "development");
     s.onload = resolve;
     s.onerror = () => reject(Error("Could not load the interface"));
     document.head.append(s);
@@ -20969,9 +20969,13 @@ async function setupPassword(client) {
   });
 }
 async function boot() {
+  if (window.top !== window.self) {
+    root.textContent = "Open this portal directly in its own browser tab.";
+    return;
+  }
   const callbackType = new URLSearchParams(location.hash.slice(1)).get("type");
   try {
-    const r = await fetch("./config.json", { cache: "no-store" });
+    const r = await fetch("./config.json?v=" + (document.querySelector("meta[name=feedia-build]")?.content || "development"), { cache: "no-store" });
     if (!r.ok) throw Error("Hosted development is not configured. No offline fallback was used.");
     const config = validateConfig(await r.json());
     const client = createClient(config.url, config.publishableKey, { auth: { storageKey: "feedia-" + document.body.dataset.portal + "-development", persistSession: true, autoRefreshToken: true, detectSessionInUrl: true } });

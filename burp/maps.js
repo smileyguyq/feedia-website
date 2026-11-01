@@ -26300,7 +26300,7 @@ function NI(e66) {
 }
 
 // shared_backend/web/maps.js
-NI(new URL("./map-worker.js", import.meta.url).href);
+NI(new URL("./map-worker.js", import.meta.url).href + new URL(import.meta.url).search);
 var validPin = (p2) => p2 && Number.isFinite(+p2.latitude) && Number.isFinite(+p2.longitude) && Math.abs(+p2.latitude) <= 90 && Math.abs(+p2.longitude) <= 180 && !(+p2.latitude === 0 && +p2.longitude === 0);
 function distance(a2, b2) {
   if (!validPin(a2) || !validPin(b2)) return null;
